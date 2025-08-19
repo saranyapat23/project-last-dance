@@ -1,0 +1,90 @@
+<?php
+    return function (PDO $pdo) {
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS tables (
+            table_id INT AUTO_INCREMENT PRIMARY KEY,
+            number VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    ");
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS menu_type (
+            type_id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    ");
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS employee (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            password VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    ");
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS menu (
+            menu_id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            type_id INT NOT NULL,
+            description VARCHAR(255) NOT NULL,
+            image VARCHAR(255) NOT NULL,
+            price DECIMAL(10,2) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            deleted_at TIMESTAMP NULL,
+            FOREIGN KEY (type_id) REFERENCES menu_type(type_id) ON DELETE CASCADE
+        );
+    ");
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS orders (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            menu_id INT NOT NULL,
+            table_id INT NOT NULL,
+            total_price DECIMAL(10,2) NOT NULL,
+            description VARCHAR(255) NOT NULL,
+            status ENUM('pending', 'preparing', 'completed', 'canceled') DEFAULT 'pending',
+            order_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            deleted_at TIMESTAMP NULL,
+            FOREIGN KEY (menu_id) REFERENCES menu(menu_id) ON DELETE CASCADE,
+            FOREIGN KEY (table_id) REFERENCES tables(table_id) ON DELETE CASCADE
+        );
+    ");
+};
+
+   
+
+    
+/*$pdo->exec("
+        CREATE TABLE IF NOT EXISTS orders (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            order_id INT NOT NULL,
+            product_id INT NOT NULL,
+            quantity INT(10),
+            price DECIMAL(10,2) NOT NULL,
+        );
+    ");
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS order_details (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            order_id INT NOT NULL,
+            product_id INT NOT NULL,
+            quantity INT(10),
+            price DECIMAL(10,2) NOT NULL,
+        );
+    ");
+ */
+
+
+
+
+
+
+
+
+
