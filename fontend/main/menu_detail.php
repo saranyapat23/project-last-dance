@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="details-card" style="margin-top: -60px;">
     <div class="row align-items-center">
       <div class="col-md-4">
-        <img class="img-fluid rounded"  src="../../backoffice/uploads/imgmenu/<?= htmlspecialchars($menu['image']) ?>" alt="Burger">
+        <img class="img-fluid rounded" style="max-width:300px; margin-top:15px; margin-left:60px; border-radius: 15px;"  src="../../backoffice/uploads/imgmenu/<?= htmlspecialchars($menu['image']) ?>" alt="รูปภาพ" onerror="this.onerror=null; this.src='../../assets/img/preview.png';">
       </div>
 
       
