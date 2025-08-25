@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="body"> 
 <?php include "../../backoffice/components/navbar.php"?>
-<div><a href="./foodrec.php"><img src="./assets/img/back-arrow.png" alt="" style="width: 50px; margin-top: 5px; margin-left: 15px; margin-bottom: 15px;"></a></div>
+<div><a href="../../fontend/main/menu.php"><img src="../../assets/img/back-arrow.png" alt="" style="width: 50px; margin-top: 5px; margin-left: 15px; margin-bottom: 15px;"></a></div>
 
 <!-- Content -->
 <div class="container mt-4">
@@ -59,30 +59,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php endif; ?>
 
   <!-- ฟอร์ม -->
-  <form class="details-card" method="POST" action="">
+ <div class="container mt-4">
+  <div class="details-card" style="margin-top: -60px;">
     <div class="row align-items-center">
-
-      <h1 style="text-align: center;">แก้ไขเมนู</h1>
-      <!-- input ชื่อ ราคา รายละเอียด -->
       <div class="col-md-4">
-        <img class="img-fluid rounded"  src="../../backoffice/uploads/imgmenu/<?= htmlspecialchars($menu['image']) ?>" alt="รูปภาพ" onerror="this.onerror=null; this.src='../../assets/img/preview.png';">
+        <img class="img-fluid rounded"  src="../../backoffice/uploads/imgmenu/<?= htmlspecialchars($menu['image']) ?>" alt="Burger">
       </div>
+
+      
       <div class="col-md-8">
-        <input class="edit_input" name="name" type="text" 
-          value="<?= htmlspecialchars($menu['name']) ?>" required> <br>
-
-        <input class="edit_input" name="price" type="number" placeholder="Price" 
-          value="<?= htmlspecialchars($menu['price']) ?>" required> <br>
-          
-
-        <textarea class="edit_input_detail" name="description" required><?= htmlspecialchars($menu['description']) ?></textarea>
-
-      </div>
+        <p class="detail-name"><?= htmlspecialchars($menu['name']) ?></p>
+        <p class="detail-name">Price <?= htmlspecialchars($menu['price']) ?> B</p>
+        <p class="food-detail"><?= htmlspecialchars($menu['description']) ?></p>
+      </div>  
     </div>
 
-    <div class="mt-3 text-end">
-      <button class="add-btn" type="submit">เพิ่มลงเมนู</button>
+    <textarea class="optional-box mt-3" placeholder="Optional: Add more text if necessary"></textarea>
+
+     <div class="mt-3 text-end">
+      <button class="add-btn" type="submit">Add to Cart</button>
     </div>
+  </div>
+</div>
+
   </form>
 </div>
 

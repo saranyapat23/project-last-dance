@@ -34,6 +34,7 @@ $menus = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#e2ffadff">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/x-icon" href="../../assets/img//152431942_114763933966355_8265361494354481544_n.png">
     <title>RecMenu</title>
     <link rel="stylesheet" href="../../assets/css/stylemore.css">
@@ -68,21 +69,21 @@ $menus = $stmt->fetchAll();
   <div class="row">
   <?php foreach ($menus as $menu): ?>
     <div class="col-6 col-md-3 d-flex justify-content-center">
-      <div  class="card align-items-center menu-pic border-0 food-pic" style="width: 17rem; border-radius: 25px; margin-top: 30px;"> 
-         <img src="../../backoffice/uploads/imgmenu/<?= htmlspecialchars($menu['image']) ?>" class="card-img-top mt-3" style="width: 200px;" height="200px" alt="รูปภาพ" onerror="this.onerror=null; this.src='../../assets/img/preview.png';">
+      <a href="./FoodDetail1.php" class="card align-items-center menu-pic border-0 food-pic" style="width: 17rem; border-radius: 25px;">
+         <img src="https://static.vecteezy.com/system/resources/previews/025/062/054/non_2x/french-fries-on-white-bowl-isolated-on-transparent-background-fried-fast-food-snack-isolated-food-photography-junk-food-fried-potatoes-free-png.png" class="card-img-top mt-3" style="width: 200px;" height="200px" alt="...">
         <div class="card-body">
           <p class="food-font"><?= htmlspecialchars($menu['name'])?></p>
-          <p class="food-font"><small>Price <?= htmlspecialchars($menu['price']) ?> ฿</small></p>
+          <p class="food-font">Price <?= htmlspecialchars($menu['price']) ?> ฿</p>
         </div>
-    <div class=" d-grid gap-2 d-md-block" style="margin-bottom: 20px;"><a href="edit.php?id=<?= $menu['menu_id']?>" ><img src="../../assets/img/pen (1).png"   width="55px" ></a>
-      <a  href="javascript:void(0);" onclick="confirmDelete('delete.php?id=<?= $menu['menu_id']?>')"><img src="../../assets/img/deletein.png" alt="Delete" width="50px" ></a>
+      </a>
     </div>
-      </div>
-   
+
       <!--href="edit.php?id=<?= $menu['menu_id']?>"-->
     </div>
   <?php endforeach; ?>
 </div>
+
+
 
 <script>
 document.querySelectorAll('input[name="menu"]').forEach(radio => {
@@ -97,28 +98,13 @@ document.querySelectorAll('input[name="menu"]').forEach(radio => {
   <?php unset($_SESSION['menu_deleted']); ?>
 <?php endif; ?>
 
-   <!-- ต้องมี sweetalert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
+   <script>
   function confirmDelete(url) {
-    Swal.fire({
-      title: 'คุณแน่ใจหรือไม่?',
-      text: "ข้อมูลจะถูกลบถาวร",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#e74c3c',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'ใช่, ลบเลย!',
-      cancelButtonText: 'ยกเลิก'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.location.href = url;
+      if (confirm("Are you sure you want to delete this menu item?")) {
+          window.location.href = url;
       }
-    })
   }
 </script>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>

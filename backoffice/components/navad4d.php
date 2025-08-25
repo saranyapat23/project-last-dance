@@ -3,6 +3,7 @@
   <div>
 <img src="../../assets/img/152431942_114763933966355_8265361494354481544_n.png" alt="" width="100px" height="100px">
 </div>
+
 <div class="ms-auto adminnav">
   <a href="https://www.youtube.com/@HotelUgly/videos"><img src="../../assets/img/order-now.png" alt="" width="50px" ></a>
 </div>

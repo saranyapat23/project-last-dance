@@ -226,6 +226,11 @@ background-color: var(--button-color);
       opacity: 0.5;
     }
 
+    .input-icon input.pw {
+  -webkit-text-security: square; /* disc | circle | square */
+    }
+
+
 
 .bg-order {
   background-color: #FAF8F1;        /* พื้นหลังสีขาว */

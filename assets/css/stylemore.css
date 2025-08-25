@@ -225,6 +225,7 @@ background-color: var(--button-color);
 /* แสดง overlay เมื่อถูกเลือก */
 .image-box.selected .overlay {
   display: block;
+  
 }
  
 .adminnav {
@@ -321,8 +322,8 @@ background-color: var(--button-color);
 .choose{
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-left: 5px;
-  width: 300px;
+  margin-left: 15px;
+  width: 20px;
   height: 40px;
 }
 
@@ -369,13 +370,13 @@ background-color: var(--button-color);
   border-radius: 30px;
   border: none;
   padding: 10px;
+  padding-left: 20px;
+  padding-top: 15px;
   width: 100%;
   height: 150px;
 }
 
 .optional-box::placeholder {
-  padding-left: 10px;
-  padding-top: 5px;
   color: #000000;
   opacity: 50%;
 }
@@ -387,6 +388,18 @@ background-color: var(--button-color);
   border-radius: 25px;
   border: none;
   font-size: 40px;
+  width: 300px;
+  height: 80px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.addcart-btn {
+  background-color: #09105A;
+  color: white;
+  padding: 10px 25px;
+  border-radius: 25px;
+  border: none;
+  font-size: 25px;
   width: 300px;
   height: 80px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -604,3 +617,182 @@ background-color: var(--button-color);
       font-size: 24px;
       cursor: pointer;
     }
+
+
+    /*For Radio custom*/
+
+.menu-options-customer {
+  background-color: var(--thrid-color);  /* สีดำ */
+  display: flex;
+  flex-wrap: wrap;          /* ถ้าเนื้อหาเยอะ จะขึ้นบรรทัดใหม่ */
+  justify-content: center;  /* จัดกึ่งกลางแนวนอน */
+  align-items: center;      /* กึ่งกลางแนวตั้ง */
+  gap: 130px;                /* ระยะห่างระหว่างปุ่ม */
+  padding: 20px;            /* ให้พื้นหลังครอบปุ่ม */
+  border-radius: 35px;      /* ขอบมน ถ้าต้องการ */
+
+    width: 70%;        /* กำหนดความกว้าง ไม่ให้เต็มจอ */
+  margin: 0 auto;    /* จัดกึ่งกลาง container */
+}
+
+.menu-options-customer input[type="radio"] {
+  display: none;
+  margin-right: 5px;
+}
+
+.menu-options-customer label {
+  width: 200px;
+  height: 70px;
+  border-radius: 25px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--secondary-color);   /* สี default */
+  color: var(--primary-color);
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+}
+
+/* เมื่อ hover */
+.menu-options-customer label:hover {
+  color: var(--secondary-color);
+  background-color: var(--primary-color);
+}
+
+/* เมื่อ radio ถูกเลือก */
+.menu-options-customer input[type="radio"]:checked + label {
+  color: var(--secondary-color);
+  background-color: var(--primary-color);  /* สีเวลาเลือก */
+}
+
+.menu-options {
+  background-color: var(--thrid-color);  /* สีดำ */
+  display: flex;
+  flex-wrap: wrap;          /* ถ้าเนื้อหาเยอะ จะขึ้นบรรทัดใหม่ */
+  justify-content: center;  /* จัดกึ่งกลางแนวนอน */
+  align-items: center;      /* กึ่งกลางแนวตั้ง */
+  gap: 130px;                /* ระยะห่างระหว่างปุ่ม */
+  padding: 20px;            /* ให้พื้นหลังครอบปุ่ม */
+  border-radius: 35px;      /* ขอบมน ถ้าต้องการ */
+
+    width: 100%;        /* กำหนดความกว้าง ไม่ให้เต็มจอ */
+  margin: 0 auto;    /* จัดกึ่งกลาง container */
+}
+
+
+
+.menu-options input[type="radio"] {
+  display: none;
+  margin-right: 5px;
+}
+
+.menu-options label {
+  width: 200px;
+  height: 70px;
+  border-radius: 25px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--secondary-color);   /* สี default */
+  color: var(--primary-color);
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+}
+
+/* เมื่อ hover */
+.menu-options label:hover {
+  color: var(--secondary-color);
+  background-color: var(--primary-color);
+}
+
+/* เมื่อ radio ถูกเลือก */
+.menu-options input[type="radio"]:checked + label {
+  color: var(--secondary-color);
+  background-color: var(--primary-color);  /* สีเวลาเลือก */
+}
+
+.addimg{
+   display: block;
+  margin: 0;
+  max-width: 300px;
+  height: 300px;
+}
+
+.edit_input_detail::placeholder{
+  font-size: 30px;
+}
+
+
+input[type="password"].disc {
+  -webkit-text-security: disc;
+}
+
+
+
+
+/*For Confirm and Delete*/
+
+.button-wrapper {
+  display: flex;
+  justify-content: center; /* จัดกึ่งกลางทั้งสองปุ่ม */
+  gap: 200px; /* เว้นระยะระหว่างปุ่ม */
+  width: max-content; /* ให้กว้างพอดีกับปุ่ม + gap */
+  margin: 0 auto; /* กึ่งกลางหน้าจอ */
+}
+
+.btn-p {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* ปุ่มแดง */
+.btn.cancel-new {
+  width: 300px;
+  height: 80px;
+  border-radius: 25px;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: #d62839;
+}
+.btn.cancel-new:hover {
+  background-color: #d63343;  /* สี hover */
+}
+
+/* ปุ่มเขียว */
+.btn.confirm-new {
+  width: 300px;
+  height: 80px;
+  border-radius: 25px;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: #4CAF50;
+}
+.btn.confirm-new:hover {
+  background-color: #5ab45f;  /* สี hover */
+}
+
+/* ปิดเอฟเฟกต์ขอบเวลาคลิก */
+.btn:focus-visible {
+  outline: none !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* คงเดิม */
+}
+
+/* ปุ่มแก้ไข-ลบ*/
