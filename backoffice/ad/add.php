@@ -46,6 +46,8 @@ foreach ($type_ids as $type_id) {
         header('Location: ../../backoffice/edit/showmenu.php');
         exit;
     }
+
+    
 ?>
 
 <?php ob_start(); ?>
@@ -55,12 +57,12 @@ foreach ($type_ids as $type_id) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
     <link rel="icon" type="image/x-icon" href="../../assets/img//152431942_114763933966355_8265361494354481544_n.png">
+    <title>Hobby Board Game Cafe</title>
     <link rel="stylesheet" href="../../assets/css/stylemore.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
-<body class="body"> 
+<body class="body background-customer"> 
 <?php include "../../backoffice/components/navbar.php"?>
 <div><a href="./foodrec.php"><img src="./assets/img/back-arrow.png" alt="" style="width: 50px; margin-top: 5px; margin-left: 15px; margin-bottom: 15px;"></a></div>
 
@@ -73,27 +75,36 @@ foreach ($type_ids as $type_id) {
   <!-- ฟอร์ม -->
   <form class="details-card" method="POST" action="" enctype="multipart/form-data">
     <div class="row align-items-center">
-
+<div class="menu-options">
      <input type="checkbox" class="btn-check" name="type_ids[]" id="recommend" value="101" autocomplete="off" checked>
-<label class="btn btn-outline-secondary" style="width: 300px; margin-left: 10px; height: 50px; padding-top: 12px;" for="recommend">RECOMMEND</label>
+<label class="btn btn-outline-secondary"  for="recommend">RECOMMEND</label>
 
 <input type="checkbox" class="btn-check" name="type_ids[]" id="food" value="102" autocomplete="off">
-<label class="btn btn-outline-secondary" style="width: 300px; margin-left: 5px; height: 50px; padding-top: 12px;" for="food">FOOD</label>
+<label class="btn btn-outline-secondary"  for="food">FOOD</label>
 
 <input type="checkbox" class="btn-check" name="type_ids[]" id="drink" value="103" autocomplete="off">
-<label class="btn btn-outline-secondary" style="width: 300px; margin-left: 5px; height: 50px; padding-top: 12px;" for="drink">DRINK</label>
+<label class="btn btn-outline-secondary"  for="drink">DRINK</label>
 
 <input type="checkbox" class="btn-check" name="type_ids[]" id="dessert" value="104" autocomplete="off">
-<label class="btn btn-outline-secondary" style="width: 300px; margin-left: 5px; height: 50px; padding-top: 12px;" for="dessert">DESSERT</label>
+<label class="btn btn-outline-secondary"  for="dessert">DESSERT</label></div>
 
       <!-- input ชื่อ ราคา รายละเอียด -->
-      <div class="col-md-4">
-  <img id="preview" src="" alt="รูปตัวอย่าง" style="max-width:300px; margin-top:15px; margin-left:60px; border-radius: 15px;" alt="รูปภาพ" onerror="this.onerror=null; this.src='../../assets/img/addimg.png';">
-<label for="fileInput" class="btn btn-primary rounded-pill px-4" >
-      เลือกรูปภาพ
-    </label>
-    <input style="display: none; border: none; " type="file" id="fileInput" name="image" accept="image/*" required hidden>
-</div>
+     
+
+ <div class="col-md-4 text-center">
+        <img id="preview" 
+             src="" 
+             alt="รูปเมนู" 
+             style="max-width:300px; margin-top:15px; border-radius:15px;"
+             onerror="this.onerror=null; this.src='../../assets/img/add-image.png';">
+
+        <div class="mt-3">
+          <label for="fileInput" class="btn btn-primary rounded-pill px-4" style="cursor: pointer;  font-weight: bold;">
+            เลือกรูปภาพ
+          </label>
+          <input type="file" id="fileInput" name="image" accept="image/*" hidden>
+        </div>
+      </div>
 
       <div class="col-md-8">
         <input class="edit_input" name="name" type="text" placeholder="Name" 

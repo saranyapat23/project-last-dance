@@ -9,6 +9,3 @@
   </div>
 
 </nav>
-<div class="navbar back-monk" >
-
-</div>

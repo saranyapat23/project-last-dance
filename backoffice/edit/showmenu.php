@@ -34,13 +34,13 @@ $menus = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#e2ffadff">
-    <link rel="icon" type="image/x-icon" href="../../assets/img//152431942_114763933966355_8265361494354481544_n.png">
-    <title>RecMenu</title>
+    <link rel="icon" type="image/x-icon" href="../../assets/img/casino.png">
+    <title>Hobby Board Game Cafe</title>
     <link rel="stylesheet" href="../../assets/css/stylemore.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     
 </head>
-<body class="body"> 
+<body class="body background-customer"> 
 <?php include "../../backoffice/components/navad4d.php"?>
 
 <div><a href="./index.php"><img src="./assets/img/back-arrow.png" alt="" style="width: 50px; margin-top: 5px; margin-left: 15px; margin-bottom: 15px;"></a></div>
@@ -66,22 +66,32 @@ $menus = $stmt->fetchAll();
   <div class="row justify-content-center g-5 " >
 
   <div class="row">
-  <?php foreach ($menus as $menu): ?>
-    <div class="col-6 col-md-3 d-flex justify-content-center">
-      <div  class="card align-items-center menu-pic border-0 food-pic" style="width: 17rem; border-radius: 25px; margin-top: 30px;"> 
-         <img src="../../backoffice/uploads/imgmenu/<?= htmlspecialchars($menu['image']) ?>" class="card-img-top mt-3" style="width: 200px;" height="200px" alt="รูปภาพ" onerror="this.onerror=null; this.src='../../assets/img/preview.png';">
-        <div class="card-body">
-          <p class="food-font"><?= htmlspecialchars($menu['name'])?></p>
-          <p class="food-font"><small>Price <?= htmlspecialchars($menu['price']) ?> ฿</small></p>
+    <?php if (!empty($menus)): ?>
+        <?php foreach ($menus as $menu): ?>
+            <div class="col-6 col-md-3 d-flex justify-content-center">
+                <div class="card align-items-center menu-pic border-0 food-pic" style="width: 17rem; border-radius: 25px; margin-top: 30px;"> 
+                    <img src="../../backoffice/uploads/imgmenu/<?= htmlspecialchars($menu['image']) ?>" class="card-img-top mt-3" style="width: 200px;" height="200px" alt="รูปภาพ" onerror="this.onerror=null; this.src='../../assets/img/preview.png';">
+                    <div class="card-body">
+                        <p class="food-font"><?= htmlspecialchars($menu['name'])?></p>
+                        <p class="food-font"><small>Price <?= htmlspecialchars($menu['price']) ?> ฿</small></p>
+                    </div>
+                    <div class="d-grid gap-2 d-md-block" style="margin-bottom: 20px;">
+                        <a href="edit.php?id=<?= $menu['menu_id']?>" ><img src="../../assets/img/pen (1).png" width="55px" ></a>
+                        <a href="javascript:void(0);" onclick="confirmDelete('delete.php?id=<?= $menu['menu_id']?>', '<?= htmlspecialchars($menu['name'], ENT_QUOTES) ?>')">
+                            <img src="../../assets/img/deletein.png" alt="Delete" width="50px">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div class="text-center" style="padding: 50px; color: #777; width: 100%;">
+            <img src="../../assets/img/empty.png" alt="ไม่มีเมนู" style="width: 120px; opacity: 0.7;">
+            <p style="margin-top: 20px; font-size: 18px;">ยังไม่มีเมนูในหมวดนี้</p>
         </div>
-    <div class=" d-grid gap-2 d-md-block" style="margin-bottom: 20px;"><a href="edit.php?id=<?= $menu['menu_id']?>" ><img src="../../assets/img/pen (1).png"   width="55px" ></a>
-      <a  href="javascript:void(0);" onclick="confirmDelete('delete.php?id=<?= $menu['menu_id']?>')"><img src="../../assets/img/deletein.png" alt="Delete" width="50px" ></a>
-    </div>
-      </div>
-   
-      <!--href="edit.php?id=<?= $menu['menu_id']?>"-->
-    </div>
-  <?php endforeach; ?>
+    <?php endif; ?>
+</div>
+
 </div>
 
 <script>
@@ -101,22 +111,22 @@ document.querySelectorAll('input[name="menu"]').forEach(radio => {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-  function confirmDelete(url) {
-    Swal.fire({
-      title: 'คุณแน่ใจหรือไม่?',
-      text: "ข้อมูลจะถูกลบถาวร",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#e74c3c',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'ใช่, ลบเลย!',
-      cancelButtonText: 'ยกเลิก'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.location.href = url;
-      }
-    })
-  }
+  function confirmDelete(url, name) {
+  Swal.fire({
+    title: 'คุณแน่ใจหรือไม่?',
+    text: `เมนู ${name} จะถูกลบถาวร`,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#e74c3c',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'ใช่, ลบเลย!',
+    cancelButtonText: 'ยกเลิก'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  })
+}
 </script>
 
 

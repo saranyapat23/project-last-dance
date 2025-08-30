@@ -187,7 +187,8 @@ background-color: var(--button-color);
 
 .logmage {
   width: 150px;
-  margin-top: 150px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .login-box input[type="submit"] {
@@ -209,12 +210,11 @@ background-color: var(--button-color);
       margin-bottom: 15px;
     }
 
-    .input-icon input {
-      width: 100%;
-      padding: 10px 10px 10px 40px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
+       .input-icon input {
+  border: none;
+  outline: none;
+  width: 80%;   /* แทนที่จะ 100% */
+}
 
     .input-icon img {
       position: absolute;
@@ -239,4 +239,124 @@ background-color: var(--button-color);
   padding-left: 300px;
   border-radius: 15px;
   
+}
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  background: var(--secondary-color);
+
+  border-radius: 15px;
+  padding: 30px;
+  max-width: 400px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.login-box h2 {
+  font-family: var(--secondary-font);
+  color: var(--primary-color);
+}
+
+.login-box form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* จัดทุก input ให้อยู่ตรงกลาง */
+}
+
+.input-icon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+}
+
+.input-icon img {
+  width: 20px;
+  margin-right: 10px;
+}
+
+.input-icon input {
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+.btn-login {
+  width: 100%;
+  background: var(--button-color);
+  border: none;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-login:hover {
+  background: var(--primary-color);
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 12px 12px 45px;   /* เว้นที่ให้ icon */
+  border: 2px solid var(--primary-color);
+  border-radius: 10px;            /* มนทุกด้าน */
+  box-sizing: border-box;
+}
+
+
+.input-group input:focus {
+  border-color: var(--button-color);
+    outline: none;         /* เอาเส้นรอบเวลาโฟกัสออก */
+  box-shadow: none;      /* เอาเงาเวลาโฟกัสออก */
+}
+
+.input-group i {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: var(--primary-color);
+  pointer-events: none; /* กัน icon บัง input เวลา click */
+}
+
+.input-group .input-group-text {
+  background: var(--secondary-color);
+  border: 2px solid var(--primary-color); 
+  border-radius: 20px 0 0 20px !important; /* มนฝั่งซ้ายแบบ pill */
+  color: var(--primary-color);
+  padding: 15px 20px;
+}
+
+/* กล่อง input */
+.input-group .form-control {
+  border: 2px solid var(--primary-color);
+  border-left: none;                      
+  border-radius: 0 20px 20px 0 !important; /* มนฝั่งขวาแบบ pill */
+  padding: 10px 15px;
+  font-family: var(--secondary-font);
+  box-shadow: none;
+  
+}
+
+/* focus effect */
+.input-group .form-control:focus {
+  border-color: var(--button-color);
+  box-shadow: 0 0 8px rgba(255,133,61,0.3);
 }

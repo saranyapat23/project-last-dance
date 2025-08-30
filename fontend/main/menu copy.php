@@ -40,7 +40,7 @@ $menus = $stmt->fetchAll();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     
 </head>
-<body class="body background-customer"> 
+<body class="body" style="background-imag"> 
 <?php include "../../fontend/layout/navbar.php"?>
 
 <div><a href="./index.php"><img src="./assets/img/back-arrow.png" alt="" style="width: 50px; margin-top: 5px; margin-left: 15px; margin-bottom: 15px;"></a></div>
@@ -64,35 +64,28 @@ $menus = $stmt->fetchAll();
 
 <div class="container mt-4">
   <div class="row justify-content-center g-5">
-    <?php if (!empty($menus)): ?>
-      <?php foreach ($menus as $menu): ?>
-        <div class="col-6 col-md-3 d-flex justify-content-center">
-          <a href="../../fontend/main/menu_detail.php?id=<?= $menu['menu_id'] ?>" 
-             class="card align-items-center menu-pic border-0 food-pic" 
-             style="width: 17rem; border-radius: 25px; margin-top: 30px;">
-            
-            <img src="../../backoffice/uploads/imgmenu/<?= htmlspecialchars($menu['image']) ?>" 
-                 class="card-img-top mt-3" 
-                 style="width: 200px; height:200px; object-fit:cover;" 
-                 alt="รูปภาพ"
-                 onerror="this.onerror=null; this.src='../../assets/img/preview.png';">
-            
-            <div class="card-body">
-              <p class="food-font"><?= htmlspecialchars($menu['name'])?></p>
-              <p class="food-font"><small>Price <?= htmlspecialchars($menu['price']) ?> ฿</small></p>
-            </div>
-          </a>
+    <div class="row">
+      <?php if (!empty($menus)): ?>
+        <?php foreach ($menus as $menu): ?>
+          <div class="col-6 col-md-3 d-flex justify-content-center">
+            <a href="../../fontend/main/menu_detail.php?id=<?= $menu['menu_id'] ?>" class="card align-items-center menu-pic border-0 food-pic" style="width: 17rem; border-radius: 25px; margin-top: 30px;">
+              <img src="../../backoffice/uploads/imgmenu/<?= htmlspecialchars($menu['image']) ?>" class="card-img-top mt-3" style="width: 200px;" height="200px" alt="รูปภาพ" onerror="this.onerror=null; this.src='../../assets/img/preview.png';">
+              <div class="card-body">
+                <p class="food-font"><?= htmlspecialchars($menu['name'])?></p>
+                <p class="food-font"><small>Price <?= htmlspecialchars($menu['price']) ?> ฿</small></p>
+              </div>
+            </a>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <div class="text-center" style="padding: 50px; color: #777; width: 100%;">
+          <img src="../../assets/img/empty.png" alt="ไม่มีเมนู" style="width: 120px; opacity: 0.7;">
+          <p style="margin-top: 20px; font-size: 18px;">ยังไม่มีเมนูในหมวดนี้</p>
         </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <div class="text-center" style="padding: 50px; color: #777; width: 100%;">
-        <img src="../../assets/img/empty.png" alt="ไม่มีเมนู" style="width: 120px; opacity: 0.7;">
-        <p style="margin-top: 20px; font-size: 18px;">ยังไม่มีเมนูในหมวดนี้</p>
-      </div>
-    <?php endif; ?>
+      <?php endif; ?>
+    </div>
   </div>
 </div>
-
 
 
 <script>
