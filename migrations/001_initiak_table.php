@@ -4,6 +4,7 @@
         CREATE TABLE IF NOT EXISTS tables (
             table_id INT AUTO_INCREMENT PRIMARY KEY,
             number VARCHAR(255) NOT NULL,
+            status ENUM('CLOSED','OPEN') NOT NULL DEFAULT 'CLOSED',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     ");
