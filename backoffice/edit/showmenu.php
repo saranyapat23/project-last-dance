@@ -41,7 +41,7 @@ $menus = $stmt->fetchAll();
     
 </head>
 <body class="body background-customer"> 
-<?php include "../../backoffice/components/navad4d.php"?>
+<?php include "../../backoffice/components/nav4test.php"?>
 
 <div><a href="./index.php"><img src="./assets/img/back-arrow.png" alt="" style="width: 50px; margin-top: 5px; margin-left: 15px; margin-bottom: 15px;"></a></div>
 

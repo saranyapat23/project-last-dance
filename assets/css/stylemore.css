@@ -294,6 +294,22 @@ background-color: var(--button-color);
   line-height: normal;
 }
 
+.table-number-edit-test{
+   background-color: var(--primary-color);
+  width: 450px;
+  height: 70px;
+  padding: 12px 24px;           /* ระยะห่างด้านใน */
+  border-radius: 10px;
+  color: #ffffff;          /* ความโค้งของขอบ */
+  font-size:40px;              /* ขนาดตัวหนังสือ */
+  font-weight: bold;            /* ตัวหนา */
+  font-family: var(--primary-font) !important; 
+  -webkit-text-stroke: 1px #000000;                           /* ทำให้ขนาดปรับตามเนื้อหา */
+  text-align: center;
+  position: flex;
+  line-height: normal;
+}
+
 /*forFooddetail*/
 
 .detail-name {

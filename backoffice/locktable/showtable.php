@@ -34,7 +34,7 @@ $tables = $stmt->fetchALL();
         <div class="flip-card_front">
           <div class="title">Table Status</div>
           <form class="flip-card_form">
-            <img class="preview" src="../../assets/img/<?= $table['status'] === 'OPEN' ? 'smile.png' : 'sad-face.png' ?>"
+            <img class="preview" src="../../assets/img/sad-face.png"
                  style="width:50%; border-radius:12px; margin-bottom:20px;">
             <span class="flip-card_input" style="font-weight:bold; font-size:20px;">โต๊ะที่ <?= htmlspecialchars($table['table_id']) ?></span>
             <span class="flip-card_input" style="font-weight:bold; font-size:20px;">สถานะ: <span class="status-text"><?= htmlspecialchars($table['status']) ?></span></span>
@@ -45,7 +45,7 @@ $tables = $stmt->fetchALL();
         <div class="flip-card_back">
           <div class="title">Table Status</div>
           <form class="flip-card_form">
-            <img class="preview" src="../../assets/img/<?= $table['status'] === 'OPEN' ? 'smile.png' : 'sad-face.png' ?>"
+            <img class="preview" src="../../assets/img/smile.png"
                  style="width:50%; border-radius:12px; margin-bottom:20px;">
             <span class="flip-card_input" style="font-weight:bold; font-size:20px;">โต๊ะที่ <?= htmlspecialchars($table['table_id']) ?></span>
             <span class="flip-card_input" style="font-weight:bold; font-size:20px;">สถานะ: <span class="status-text"><?= htmlspecialchars($table['status']) ?></span></span>
@@ -69,8 +69,7 @@ document.querySelectorAll('.toggle').forEach(toggle => {
     const imgs = card.querySelectorAll('.preview');
 
     // เปลี่ยน UI ทันที
-    statusText.forEach(el => el.textContent = newStatus);
-    imgs.forEach(img => img.src = '../../assets/img/' + (newStatus === 'OPEN' ? 'smile.png' : 'sad-face.png'));
+   statusText.forEach(el => el.textContent = newStatus);
 
     // ส่งไปอัปเดต DB
     fetch('update_status.php', {
