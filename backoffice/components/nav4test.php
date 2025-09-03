@@ -19,10 +19,10 @@
     Admin Menu
   </button>
   <ul class="dropdown-menu dropdown-menu-end" style="background-color:#fffbe6; color:#000;">
-    <li><a class="dropdown-item fw-bold" href="#">หน้าออเดอร์</a></li>
-    <li><a class="dropdown-item fw-bold" href="#">หน้าจัดการโต๊ะ</a></li>
-    <li><a class="dropdown-item fw-bold" href="#">หน้าแดชบอร์ด</a></li>
-    <li><a class="dropdown-item fw-bold" href="#">หน้าประวัติคำสั่งซื้อ</a></li>
+    <li><a class="dropdown-item fw-bold" href="../../backoffice/order/order.php">หน้าออเดอร์</a></li>
+    <li><a class="dropdown-item fw-bold" href="../../backoffice/locktable/showtable.php">หน้าจัดการโต๊ะ</a></li>
+    <li><a class="dropdown-item fw-bold" href="../../backoffice/dashboard/dashboard.php">หน้าแดชบอร์ด</a></li>
+    <li><a class="dropdown-item fw-bold" href="../../backoffice/order/history.php">หน้าประวัติคำสั่งซื้อ</a></li>
   </ul>
 </li>
 

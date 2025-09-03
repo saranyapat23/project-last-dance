@@ -3,14 +3,76 @@ require_once '../../includes/db.php';
 require_once '../../includes/config.php';
 session_start();
 
+// ===== Filter by Date =====
+$today = isset($_GET['date']) ? $_GET['date'] : null;
 
-$today = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
+if ($today) {
+    // ดึงข้อมูลเฉพาะวันนั้น
+    $stmt = $pdo->prepare("SELECT * FROM orders WHERE DATE(order_at) = ? ORDER BY order_at DESC");
+    $stmt->execute([$today]);
+} else {
+    // ดึงทั้งหมด
+    $stmt = $pdo->query("SELECT * FROM orders ORDER BY order_at DESC");
+}
 
-// ดึงเฉพาะ order ที่ตรงกับวันนั้น
-$stmt = $pdo->prepare("SELECT * FROM orders WHERE DATE(order_at) = ?");
-$stmt->execute([$today]);
 $menus = $stmt->fetchAll();
+
+// ====== รายงานสรุป ======
+$sql = "
+SELECT mt.name AS type_name, COALESCE(SUM(od.quantity),0) AS qty
+FROM menu_type mt
+LEFT JOIN menu m ON m.type_id = mt.type_id
+LEFT JOIN order_details od ON od.menu_id = m.menu_id
+LEFT JOIN orders o ON o.id = od.order_id AND o.deleted_at IS NULL
+GROUP BY mt.type_id, mt.name
+ORDER BY mt.type_id
+";
+$type = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+$typeNames = [
+    101 => "เมนูอาหาร",
+    102 => "เครื่องดื่ม",
+    103 => "ของหวาน"
+];
+
+$labels = [];
+$data = [];
+foreach ($type as $row) {
+    $labels[] = $row['type_name']; 
+    $data[] = (int)$row['qty'];
+}
+
+// นับจำนวนเมนูทั้งหมด
+$sql = "SELECT COUNT(*) AS total_menus
+FROM menu
+WHERE deleted_at IS NULL
+  AND type_id != 101";
+$totalMenus = $pdo->query($sql)->fetchColumn();
+
+// ออเดอร์วันนี้
+$stmt = $pdo->query("
+    SELECT COUNT(*) AS total_orders
+    FROM orders
+    WHERE deleted_at IS NULL
+    AND DATE(order_at) = CURDATE()
+");
+$totalOrders = $stmt->fetchColumn();
+
+// ยอดขายวันนี้
+$stmt = $pdo->query("
+    SELECT SUM(od.price * od.quantity) AS total_sales
+    FROM orders o
+    JOIN order_details od ON od.order_id = o.id
+    WHERE DATE(o.order_at) = CURDATE()
+");
+
+$todaySales = $stmt->fetchColumn(); 
+if (!$todaySales) {
+    $todaySales = 0;
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,10 +86,20 @@ $menus = $stmt->fetchAll();
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- gridjs -->
+  <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+  <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+<!-- datatables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<!-- echarts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
 </head>
 <body class="body">
 
-<?php include "../../backoffice/components/navbar_admin.php"?>
+<?php include "../../backoffice/components/test.php"?>
 
 <div class="container mt-4">
   <h2 class="mb-4 fw-bold"><i class="fa-solid fa-mug-saucer"></i> DASHBOARD</h2>
@@ -39,7 +111,7 @@ $menus = $stmt->fetchAll();
         <div class="card-body text-center" style="border-radius: 20px;padding-top: 45px;">
           <i class="fa-solid fa-book-open fa-2x text-primary mb-2"></i>
           <h5 class="card-title">เมนูทั้งหมด</h5>
-          <p class="fs-4 fw-bold">25</p>
+          <p class="fs-4 fw-bold"><?= htmlspecialchars($totalMenus) ?></p>
         </div>
       </div>
     </div>
@@ -48,7 +120,7 @@ $menus = $stmt->fetchAll();
         <div class="card-body text-center" style="border-radius: 20px;padding-top: 45px;">
           <i class="fa-solid fa-receipt fa-2x text-success mb-2"></i>
           <h5 class="card-title">ออเดอร์วันนี้</h5>
-          <p class="fs-4 fw-bold">48</p>
+          <p class="fs-4 fw-bold"><?= htmlspecialchars($totalOrders) ?></p>
         </div>
       </div>
     </div>
@@ -57,7 +129,7 @@ $menus = $stmt->fetchAll();
         <div class="card-body text-center" style=" border-radius: 20px;padding-top: 45px;">
           <i class="fa-solid fa-sack-dollar fa-2x text-warning mb-2"></i>
           <h5 class="card-title">ยอดขายวันนี้</h5>
-          <p class="fs-4 fw-bold">฿3,250</p>
+          <p class="fs-4 fw-bold">฿<?= htmlspecialchars($todaySales) ?></p>
         </div>
       </div>
     </div>
@@ -90,17 +162,20 @@ $menus = $stmt->fetchAll();
           📈 ยอดขาย 7 วันย้อนหลัง
         </div>
         <div class="card-body">
-          <canvas id="salesChart"></canvas>
+          <canvas id="salesChart" width="400"></canvas>
         </div>
+
+        
       </div>
     </div>
+
     <div class="col-md-4">
       <div class="card shadow-sm border-0 rounded-3">
         <div class="card-header bg-success text-white fw-bold">
           ☕ ประเภทเมนูขายดี
         </div>
         <div class="card-body">
-          <canvas id="menuChart"></canvas>
+          <div id="menuChart" style="width:100%; height:400px;"></div>
         </div>
       </div>
     </div>
@@ -108,36 +183,51 @@ $menus = $stmt->fetchAll();
 
   <!-- Table Section -->
   <div class="card shadow-sm border-0 rounded-3 mt-5">
-    <div class="card-header bg-dark text-white fw-bold">
-      <i class="fa-solid fa-clock-rotate-left"></i> ออเดอร์ล่าสุด
-    </div>
-    <div class="card-body">
-       
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>ลูกค้า</th>
-            <th>เมนูที่สั่ง</th>
-            <th>ราคารวม</th>
-            <th>เวลา</th>
-          </tr>
-        </thead>
-        <tbody>
-             <?php foreach ($menus as $menu): ?>
-          <tr>
-            <td><?= htmlspecialchars($menu['id'])?></td>
-            <td><?= htmlspecialchars($menu['table_id'])?></td>
-            <td>สั่ง </td>
-            <td><?= htmlspecialchars($menu['total_price'])?></td>
-            <td><?= htmlspecialchars($menu['order_at'])?></td>
-          </tr>
-              <?php endforeach; ?>
-        </tbody>
-      </table>
-  
-    </div>
+  <div class="card-header bg-dark text-white fw-bold">
+    <i class="fa-solid fa-clock-rotate-left"></i> ออเดอร์ล่าสุด
   </div>
+  <div class="card-body">
+    <table id="ordersTable" class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>โต๊ะที่</th>
+          <th>วันที่</th>
+          <th>เวลา</th>
+          <th>สถานะ</th>
+          <th>ราคารวม</th>
+          <th>รายละเอียด</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php $i = 1; foreach ($menus as $menu): ?>
+          <?php
+            $status = htmlspecialchars($menu['status']);
+            $statusColors = [
+              'pending'   => 'warning',
+              'preparing' => 'primary',
+              'completed' => 'success'
+            ];
+            $badgeClass = $statusColors[$status] ?? 'secondary';
+          ?>
+          <tr>
+            <td><?= $i++ ?></td>
+            <td><?= htmlspecialchars($menu['table_id']) ?></td>
+            <td><?= date('d/m/Y', strtotime($menu['order_at'])) ?></td>
+            <td><?= date('H:i', strtotime($menu['order_at'])) ?> น.</td>
+            <td><span class="badge bg-<?= $badgeClass ?>"><?= $status ?></span></td>
+            <td>฿<?= htmlspecialchars($menu['total_price']) ?></td>
+            <td>
+              <a href="showmenu.php?id=<?= $menu['id'] ?>" class="btn btn-sm btn-outline-info">
+                <i class="fa-solid fa-circle-info"></i>
+              </a>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 </div>
 
@@ -167,32 +257,67 @@ $menus = $stmt->fetchAll();
   });
 
   // Doughnut Chart - Menu Categories
-  const menuCtx = document.getElementById('menuChart').getContext('2d');
-  new Chart(menuCtx, {
-    type: 'doughnut',
-    data: {
-      labels: ['เมนูอาหาร', 'เครื่องดื่ม', 'ของหวาน'],
-      datasets: [{
-        data: [55, 25, 15],
-        backgroundColor: [
-          'rgba(54, 162, 235, 0.7)',
-          'rgba(255, 206, 86, 0.7)',
-          'rgba(255, 99, 132, 0.7)',
-        ],
-        borderColor: [
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(255, 99, 132, 1)',
-        ],
-        borderWidth: 1
-      }]
+  var chartDom = document.getElementById('menuChart');
+  var myChart = echarts.init(chartDom);
+
+  var option = {
+    tooltip: {
+      trigger: 'item'
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: 'bottom' }
+    legend: {
+      top: '5%',
+      left: 'center'
+    },
+    series: [
+      {
+        name: 'หมวดหมู่เมนู',
+        type: 'pie',
+        top: '5%',
+        radius: ['50%', '70%'],
+        avoidLabelOverlap: false,
+        padAngle: 5,
+        itemStyle: {
+          borderRadius: 10
+        },
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 24,
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: <?= json_encode(array_map(function($l,$d){ 
+          return ["name"=>$l,"value"=>$d]; 
+        }, $labels, $data)) ?>
       }
-    }
+    ]
+  };
+
+  myChart.setOption(option);
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('#ordersTable').DataTable({
+      pageLength: 10,
+      lengthChange: false,
+      ordering: true,
+      searching: true,
+      language: {
+        search: "ค้นหา:",
+        paginate: {
+          previous: "ก่อนหน้า",
+          next: "ถัดไป"
+        }
+      }
+    });
   });
 </script>
 

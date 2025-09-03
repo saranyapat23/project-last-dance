@@ -52,8 +52,7 @@ function timeAgo($time) {
 </head>
 
 <body class="body">
-  <?php include "../../backoffice/components/navad.php" ?>
-
+<?php include "../../backoffice/components/test.php"?>
   <div><a href="./foodrec.php"><img src="./assets/img/back-arrow.png" alt="" style="width: 50px; margin-top: 5px; margin-left: 15px; margin-bottom: 15px;"></a></div>
  
     

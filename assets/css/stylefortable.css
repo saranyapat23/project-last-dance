@@ -260,6 +260,10 @@ body{
     background-color: #FAEAB1 !important;
 }
 
+.nav-link i {
+  margin-bottom: 4px; /* ปรับค่าตามต้องการ */
+}
+
 
 
 

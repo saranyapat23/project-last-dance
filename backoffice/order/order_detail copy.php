@@ -83,50 +83,10 @@ $statusFlow = [
 <div class="container position-relative">
          
     <?php foreach ($orders as $order_id => $order): ?>
-        
         <div class="menu-card">
-
-        <div class="position-relative m-5" >
-  <div class="progress" role="progressbar" aria-label="Progress" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="height: 2px;">
-    <?php 
-      // กำหนดความกว้างของ progress ตามสถานะ
-      $progressWidth = 0;
-      if ($order['status'] === 'pending') $progressWidth = 0;
-      if ($order['status'] === 'preparing') $progressWidth = 50;
-      if ($order['status'] === 'completed') $progressWidth = 100;
-    ?>
-    <div class="progress-bar bg-success " style="width: <?= $progressWidth ?>%"></div>
-  </div>
-
-  <!-- ปุ่มสถานะ -->
-  <button type="button" 
-          class="position-absolute top-0 start-0 translate-middle btn btn-sm  <?= $order['status']=='pending' ? 'btn-warning' : 'btn-success' ?> rounded-pill" 
-          style="width: 7rem; height: 5rem;">
-     <b>PENDING</b> 
-  </button>
-<button type="button" 
-        class="position-absolute top-0 start-50 translate-middle btn btn-sm rounded-pill
-        <?php 
-            if ($order['status'] == 'preparing') {
-                echo 'btn-warning'; // ฟ้า ตอนอยู่ขั้น preparing
-            } elseif ($order['status'] == 'completed') {
-                echo 'btn-success'; // เลยแล้วเป็นเขียว
-            } else {
-                echo 'btn-secondary'; // ยังไม่ถึง
-            }
-        ?>" 
-        style="width: 7rem; height: 5rem;">
-    <b>PREPARING</b>
-</button>
-  <button type="button" 
-          class="position-absolute top-0 start-100 translate-middle btn btn-sm  <?= $order['status']=='completed' ? 'btn-success' : 'btn-secondary' ?> rounded-pill" 
-          style="width: 7rem; height: 5rem;">
-      <b>COMPLETED</b>
-  </button>
-</div>
- 
+          <h5>Status: <?= htmlspecialchars($order['status']) ?></h5>
             <?php foreach ($order['items'] as $menu): ?>
-                <div class="menu-item" ">
+                <div class="menu-item">
                     <img src="../../backoffice/uploads/imgmenu/<?= htmlspecialchars($menu['image']) ?>" 
                          alt="รูปภาพ" 
                          onerror="this.onerror=null; this.src='../../assets/img/preview.png';">

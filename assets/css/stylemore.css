@@ -545,6 +545,31 @@ background-color: var(--button-color);
   justify-content: space-between; /* จัดให้ span ไปซ้าย, button ไปขวา */
     }
 
+    .total-section-just {
+  font: var(--primary-font); 
+  font-size: 50px; /* ขนาดเท่าภาพตัวอย่าง */
+  font-weight: bold; /* ตัวหนา */
+  margin-top: 20px;
+  padding: 10px 0;
+    display: flex;
+  align-items: center;
+
+    }
+
+    .btn-pending {
+    background-color: #3498db; /* ฟ้า */
+    color: white;
+}
+.btn-preparing {
+    background-color: #e67e22; /* ส้ม */
+    color: white;
+}
+.btn-completed {
+    background-color: #2ecc71; /* เขียว */
+    color: white;
+}
+
+
     .order-btn {
       font-size: 40px;
       height: 88px;
