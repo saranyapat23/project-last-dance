@@ -4,12 +4,12 @@ require_once '../../includes/config.php';
 session_start();
 
 // ===== Filter by Date =====
-$today = isset($_GET['date']) ? $_GET['date'] : null;
+$selectedDate = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
 
-if ($today) {
+if ($selectedDate) {
     // ดึงข้อมูลเฉพาะวันนั้น
     $stmt = $pdo->prepare("SELECT * FROM orders WHERE DATE(order_at) = ? ORDER BY order_at DESC");
-    $stmt->execute([$today]);
+    $stmt->execute([$selectedDate]);
 } else {
     // ดึงทั้งหมด
     $stmt = $pdo->query("SELECT * FROM orders ORDER BY order_at DESC");
@@ -24,15 +24,16 @@ FROM menu_type mt
 LEFT JOIN menu m ON m.type_id = mt.type_id
 LEFT JOIN order_details od ON od.menu_id = m.menu_id
 LEFT JOIN orders o ON o.id = od.order_id AND o.deleted_at IS NULL
+WHERE mt.type_id != 101 
 GROUP BY mt.type_id, mt.name
 ORDER BY mt.type_id
 ";
 $type = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 $typeNames = [
-    101 => "เมนูอาหาร",
-    102 => "เครื่องดื่ม",
-    103 => "ของหวาน"
+    102 => "เมนูอาหาร",
+    103 => "เครื่องดื่ม",
+    104 => "ของหวาน"
 ];
 
 $labels = [];
@@ -42,33 +43,74 @@ foreach ($type as $row) {
     $data[] = (int)$row['qty'];
 }
 
-// นับจำนวนเมนูทั้งหมด
+// ====== เมนูทั้งหมด (ไม่อิงวัน) ======
 $sql = "SELECT COUNT(*) AS total_menus
-FROM menu
-WHERE deleted_at IS NULL
-  AND type_id != 101";
+        FROM menu
+        WHERE deleted_at IS NULL
+        AND type_id != 101";
 $totalMenus = $pdo->query($sql)->fetchColumn();
 
-// ออเดอร์วันนี้
-$stmt = $pdo->query("
+// ====== ออเดอร์ตามวันที่เลือก ======
+$stmt = $pdo->prepare("
     SELECT COUNT(*) AS total_orders
     FROM orders
     WHERE deleted_at IS NULL
-    AND DATE(order_at) = CURDATE()
+    AND DATE(order_at) = ?
 ");
+$stmt->execute([$selectedDate]);
 $totalOrders = $stmt->fetchColumn();
 
-// ยอดขายวันนี้
-$stmt = $pdo->query("
+// ====== ยอดขายตามวันที่เลือก ======
+$stmt = $pdo->prepare("
     SELECT SUM(od.price * od.quantity) AS total_sales
     FROM orders o
     JOIN order_details od ON od.order_id = o.id
-    WHERE DATE(o.order_at) = CURDATE()
+    WHERE DATE(o.order_at) = ?
 ");
-
+$stmt->execute([$selectedDate]);
 $todaySales = $stmt->fetchColumn(); 
 if (!$todaySales) {
     $todaySales = 0;
+}
+
+// ====== ยอดขายย้อนหลัง 7 วัน ======
+$sql = "
+    SELECT DATE(o.order_at) AS order_date,
+           SUM(od.price * od.quantity) AS total_sales,
+           COUNT(DISTINCT o.id) AS total_orders
+    FROM orders o
+    JOIN order_details od ON od.order_id = o.id
+    WHERE o.order_at >= CURDATE() - INTERVAL 6 DAY
+    GROUP BY DATE(o.order_at)
+    ORDER BY order_date
+";
+$sales7days = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+// ====== เตรียม labels และ data สำหรับกราฟ ======
+$salesLabels = [];
+$salesData   = [];
+$orderData   = [];
+
+for ($i = 6; $i >= 0; $i--) {
+    $day = date('Y-m-d', strtotime("-$i day"));
+    $found = false;
+
+    foreach ($sales7days as $row) {
+        if ($row['order_date'] === $day) {
+            $salesLabels[] = date('d M', strtotime($day));
+            $salesData[]   = (float)$row['total_sales'];
+            $orderData[]   = (int)$row['total_orders'];
+            $found = true;
+            break;
+        }
+    }
+
+    if (!$found) {
+        // ถ้าวันนั้นไม่มีข้อมูล
+        $salesLabels[] = date('d M', strtotime($day));
+        $salesData[]   = 0;
+        $orderData[]   = 0;
+    }
 }
 ?>
 
@@ -80,7 +122,7 @@ if (!$todaySales) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cafe Dashboard</title>
-  <link rel="icon" type="image/x-icon" href="../../assets/img/coffee-icon.png">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/casino.png">
   <link rel="stylesheet" href="../../assets/css/stylemore.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -99,7 +141,7 @@ if (!$todaySales) {
 </head>
 <body class="body">
 
-<?php include "../../backoffice/components/test.php"?>
+<?php include "../components/test.php"?>
 
 <div class="container mt-4">
   <h2 class="mb-4 fw-bold"><i class="fa-solid fa-mug-saucer"></i> DASHBOARD</h2>
@@ -184,7 +226,7 @@ if (!$todaySales) {
   <!-- Table Section -->
   <div class="card shadow-sm border-0 rounded-3 mt-5">
   <div class="card-header bg-dark text-white fw-bold">
-    <i class="fa-solid fa-clock-rotate-left"></i> ออเดอร์ล่าสุด
+    <i class="fa-solid fa-clock-rotate-left"></i> ประวัติคำสั่งซื้อ
   </div>
   <div class="card-body">
     <table id="ordersTable" class="table table-striped table-hover align-middle">
@@ -233,28 +275,42 @@ if (!$todaySales) {
 
 <!-- Chart.js Script -->
 <script>
-  // Line Chart - Sales (7 Days)
-  const salesCtx = document.getElementById('salesChart').getContext('2d');
-  new Chart(salesCtx, {
-    type: 'line',
-    data: {
-      labels: ['25 Aug', '26 Aug', '27 Aug', '28 Aug', '29 Aug', '30 Aug', '31 Aug'],
-      datasets: [{
+  //7 Days
+ const salesCtx = document.getElementById('salesChart').getContext('2d');
+new Chart(salesCtx, {
+  type: 'line',
+  data: {
+    labels: <?= json_encode($salesLabels) ?>,
+    datasets: [
+      {
         label: 'ยอดขาย (บาท)',
-        data: [2200, 3100, 2800, 3500, 4000, 3700, 3250],
+        data: <?= json_encode($salesData) ?>,
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        yAxisID: 'y',
         fill: true,
         tension: 0.3
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: 'top' }
+      },
+      {
+        label: 'จำนวนออเดอร์',
+        data: <?= json_encode($orderData) ?>,
+        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: 'rgba(192, 75, 75, 0.2)',
+        yAxisID: 'y1',
+        fill: true,
+        tension: 0.3
       }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      y: { type: 'linear', position: 'left', title: { display: true, text: 'ยอดขาย (บาท)' } },
+      y1: { type: 'linear', position: 'right', title: { display: true, text: 'จำนวนออเดอร์' }, grid: { drawOnChartArea: false } }
     }
-  });
+  }
+});
 
   // Doughnut Chart - Menu Categories
   var chartDom = document.getElementById('menuChart');
@@ -319,7 +375,10 @@ if (!$todaySales) {
       }
     });
   });
+  
 </script>
+
+ิ<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

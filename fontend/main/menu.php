@@ -3,6 +3,34 @@ require_once '../../includes/db.php';
 require_once '../../includes/config.php';
 session_start();
 
+// รับค่า table_id จาก QR code
+if (isset($_GET['table_id'])) {
+    $_SESSION['table_id'] = (int)$_GET['table_id'];
+}
+
+// ถ้าไม่มีทั้ง GET และ SESSION → แสดง error
+if (!isset($_SESSION['table_id'])) {
+    die("ไม่พบข้อมูลโต๊ะ กรุณา scan QR code ใหม่");
+}
+
+// ✅ ตรวจสอบสถานะโต๊ะ
+$table_id = $_SESSION['table_id'];
+$stmt = $pdo->prepare("SELECT status FROM tables WHERE table_id = ?");
+$stmt->execute([$table_id]);
+$status = $stmt->fetchColumn();
+
+if ($status !== 'OPEN') {
+    echo "
+    <div style='display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; background: '>
+        <img src='../../assets/img/pig.png' alt='โต๊ะปิด' style='width:150px; margin-bottom:20px; opacity:0.7;'>
+        <h2 style='color:red; text-align:center;'>❌ โต๊ะนี้ถูกปิดใช้งาน</h2>
+        <p style='color:#555; margin-top:10px;'>กรุณาติดต่อพนักงานเพื่อเปิดใช้งานโต๊ะ</p>
+    </div>
+    ";
+    exit;
+}
+
+
 $stmt = $pdo->query("SELECT * FROM menu");
 $menus = $stmt->fetchALL();
 
@@ -17,9 +45,23 @@ $menu = isset($_GET['menu']) ? (int)$_GET['menu'] : 1;
 $type_id = $typeMap[$menu];
 
 // ดึงข้อมูลตาม type_id
-$stmt = $pdo->prepare("SELECT * FROM menu WHERE type_id = ?");
-$stmt->execute([$type_id]);
-$menus = $stmt->fetchAll();
+
+if ($menu == 1) {
+    // Recommend menu → is_hot = 1
+    $stmt = $pdo->prepare("SELECT * FROM menu WHERE is_hot = 1");
+    $stmt->execute();
+    $menus = $stmt->fetchAll();
+} else {
+    // Food/Drink/Dessert → query ตาม type_id
+    $type_id = $typeMap[$menu];
+    $stmt = $pdo->prepare("SELECT * FROM menu WHERE type_id = ?");
+    $stmt->execute([$type_id]);
+    $menus = $stmt->fetchAll();
+}
+
+if (isset($_GET['table_id'])) {
+    $_SESSION['table_id'] = (int)$_GET['table_id'];
+}
 
 ?>
 
@@ -41,7 +83,23 @@ $menus = $stmt->fetchAll();
     
 </head>
 <body class="body background-customer"> 
-<?php include "../../fontend/layout/navbar.php"?>
+
+
+<nav class="navbar navbar-expand-lg nav-color">
+  <div class="container-fluid">
+  <div>
+<img src="../../assets/img/152431942_114763933966355_8265361494354481544_n.png" alt="" width="100px" height="100px">
+</div>
+<div class="ms-auto adminnav">
+  <a href="../../fontend/history/history.php"><img src="../../assets/img/historymenu (1).png" alt="" style="width: 55px; margin-left: 7px; margin-top: 2px;" ></a>
+</div>
+<div class="table-number">
+    Table
+    <?= isset($_SESSION['table_id']) ? htmlspecialchars($_SESSION['table_id']) : "ไม่ระบุ" ?>
+</div>
+
+
+</nav>
 
 <div><a href="./index.php"><img src="./assets/img/back-arrow.png" alt="" style="width: 50px; margin-top: 5px; margin-left: 15px; margin-bottom: 15px;"></a></div>
 
@@ -103,18 +161,7 @@ document.querySelectorAll('input[name="menu"]').forEach(radio => {
 });
 </script>
 
-<?php if (!empty($_SESSION['menu_deleted'])): ?>
-  <p style="color: green;">ลบเมนูเรียบร้อยแล้ว</p>
-  <?php unset($_SESSION['menu_deleted']); ?>
-<?php endif; ?>
 
-   <script>
-  function confirmDelete(url) {
-      if (confirm("Are you sure you want to delete this menu item?")) {
-          window.location.href = url;
-      }
-  }
-</script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>

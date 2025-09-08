@@ -69,7 +69,7 @@ $statusFlow = [
             </a>
         </div>
         <div class="table-number">
-            Table <?= htmlspecialchars($id) ?>
+            Order <?= htmlspecialchars($id) ?>
         </div>
     </div>
 </nav>

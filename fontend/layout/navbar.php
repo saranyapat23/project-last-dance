@@ -3,9 +3,8 @@
   <div>
 <img src="../../assets/img/152431942_114763933966355_8265361494354481544_n.png" alt="" width="100px" height="100px">
 </div>
-<div class="ms-auto">
-  <a href="https://www.youtube.com/@wachirawit007/videos"><img src="./assets/img/history.png" alt="" width="60px" style="margin-right: 10px"></a>
-  
+<div class="ms-auto adminnav">
+  <a href="../../fontend/history/history.php"><img src="../../assets/img/historymenu (1).png" alt="" style="width: 55px; margin-left: 7px; margin-top: 2px;" ></a>
 </div>
 <div class="table-number">
     Table 2

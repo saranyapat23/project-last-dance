@@ -21,6 +21,8 @@ $stmt = $pdo->prepare("SELECT * FROM menu WHERE type_id = ?");
 $stmt->execute([$type_id]);
 $menus = $stmt->fetchAll();
 
+
+
 ?>
 
 

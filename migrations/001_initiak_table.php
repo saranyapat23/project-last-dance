@@ -5,7 +5,8 @@
             table_id INT AUTO_INCREMENT PRIMARY KEY,
             number VARCHAR(255) NOT NULL,
             status ENUM('CLOSED','OPEN') NOT NULL DEFAULT 'CLOSED',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            update_at TIMESTAMP  DEFAULT CURRENT_TIMESTAMP 
         );
     ");
 
@@ -13,6 +14,7 @@
         CREATE TABLE IF NOT EXISTS menu_type (
             type_id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(100) NOT NULL,
+            is_hot TINYINT(1) DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     ");

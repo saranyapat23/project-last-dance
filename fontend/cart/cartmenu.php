@@ -3,7 +3,22 @@ require_once '../../includes/db.php';
 require_once '../../includes/config.php';
 session_start();
 
-$cart_id = $_SESSION['cart_id'] ?? 1; // สมมติ cart_id
+// ตอนเริ่มหน้า cart.php
+if (!isset($_SESSION['cart_id'])) {
+    if (!isset($_SESSION['table_id'])) {
+        die("ไม่พบ table_id กรุณา scan QR code ใหม่");
+    }
+
+    $table_id = $_SESSION['table_id'];
+
+    $stmt = $pdo->prepare("INSERT INTO cart (table_id) VALUES (?)");
+    $stmt->execute([$table_id]);
+
+    $_SESSION['cart_id'] = $pdo->lastInsertId();
+}
+
+$cart_id = $_SESSION['cart_id'];
+
 
 // ดึงรายการใน cart_items พร้อมข้อมูลจาก menu
 $stmt = $pdo->prepare("
@@ -12,7 +27,7 @@ $stmt = $pdo->prepare("
     FROM cart_items ci
     JOIN menu m ON ci.menu_id = m.menu_id
     WHERE ci.cart_id = ?
-");
+"); 
 $stmt->execute([$cart_id]);
 $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

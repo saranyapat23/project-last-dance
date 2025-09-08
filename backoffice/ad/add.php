@@ -76,16 +76,14 @@ foreach ($type_ids as $type_id) {
   <form class="details-card" method="POST" action="" enctype="multipart/form-data">
     <div class="row align-items-center">
 <div class="menu-options">
-     <input type="checkbox" class="btn-check" name="type_ids[]" id="recommend" value="101" autocomplete="off" checked>
-<label class="btn btn-outline-secondary"  for="recommend">RECOMMEND</label>
-
-<input type="checkbox" class="btn-check" name="type_ids[]" id="food" value="102" autocomplete="off">
+    
+<input type="radio" class="btn-check" name="type_ids[]" id="food" value="102" autocomplete="off">
 <label class="btn btn-outline-secondary"  for="food">FOOD</label>
 
-<input type="checkbox" class="btn-check" name="type_ids[]" id="drink" value="103" autocomplete="off">
+<input type="radio" class="btn-check" name="type_ids[]" id="drink" value="103" autocomplete="off">
 <label class="btn btn-outline-secondary"  for="drink">DRINK</label>
 
-<input type="checkbox" class="btn-check" name="type_ids[]" id="dessert" value="104" autocomplete="off">
+<input type="radio" class="btn-check" name="type_ids[]" id="dessert" value="104" autocomplete="off">
 <label class="btn btn-outline-secondary"  for="dessert">DESSERT</label></div>
 
       <!-- input ชื่อ ราคา รายละเอียด -->

@@ -25,27 +25,21 @@
           </a>
         </li>
         <li class="nav-item mx-2">
-          <a class="nav-link d-flex flex-column align-items-center" href="#">
+          <a class="nav-link d-flex flex-column align-items-center" href="../../backoffice/locktable/showtable.php">
             <i class="bi bi-house-lock-fill fs-4"></i>
             <span><b>Table</b></span>
           </a>
         </li>
         <li class="nav-item mx-2">
-          <a class="nav-link d-flex flex-column align-items-center" href="#">
+          <a class="nav-link d-flex flex-column align-items-center " href="../../backoffice/order/order.php">
             <i class="bi bi-clipboard2-heart-fill fs-4"></i>
             <span class="small"><b>Orders</b></span>
           </a>
         </li>
         <li class="nav-item mx-2">
-          <a class="nav-link d-flex flex-column align-items-center" href="#">
+          <a class="nav-link d-flex flex-column align-items-center" href="../../backoffice/edit/showmenu.php">
             <i class="bi bi-pencil-square fs-4"></i>
             <span class="small"><b>EDIT</b></span>
-          </a>
-        </li>
-        <li class="nav-item mx-2">
-          <a class="nav-link d-flex flex-column align-items-center" href="#">
-            <i class="bi bi-clock-history fs-4"></i>
-            <span class="small"><b>History</b></span>
           </a>
         </li>
       </ul>

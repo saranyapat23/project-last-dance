@@ -3,6 +3,7 @@ require_once '../../includes/db.php';
 require_once '../../includes/config.php';
 session_start();
 
+// ✅ รับค่า id ของเมนูจาก URL
 $id = $_GET['id'] ?? null;
 if (!$id) {
     header('Location: showmenu.php');
@@ -20,11 +21,13 @@ if (!$menu) {
 
 $error = '';
 
-
-// สร้าง cart ใหม่ถ้ายังไม่มีใน session
+// ✅ สร้าง cart ใหม่ถ้ายังไม่มีใน session
 if (!isset($_SESSION['cart_id'])) {
-    // สร้าง cart ใหม่
-    $table_id = 2; // ใส่ table_id ที่มีอยู่ใน tables
+    if (!isset($_SESSION['table_id'])) {
+        die("ไม่พบ table_id กรุณา Scan QR Code ก่อน");
+    }
+
+    $table_id = $_SESSION['table_id']; // ได้จาก QR code
     $stmt = $pdo->prepare("INSERT INTO cart (table_id) VALUES (?)");
     $stmt->execute([$table_id]);
 
@@ -34,37 +37,32 @@ if (!isset($_SESSION['cart_id'])) {
 
 $cart_id = $_SESSION['cart_id'];
 
-
-
-
+// ✅ เพิ่มสินค้าใน cart
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     $optional = trim($_POST['optional'] ?? '');
     if ($optional === '') {
-        $optional = "(ไม่ได้เพิ่มรายละเอียด)"; // default message
+        $optional = "(ไม่ได้เพิ่มรายละเอียด)";
     }
 
-    // เพิ่มสินค้าลง cart_item ตามโครงสร้างจริง
     $stmt = $pdo->prepare("
-    INSERT INTO cart_items (cart_id, menu_id, quantity, price, note)
-    VALUES (?, ?, ?, ?, ?)
-");
-$stmt->execute([
-    $cart_id,
-    $menu['menu_id'],
-    1,
-    $menu['price'],
-    $optional
-]);
+        INSERT INTO cart_items (cart_id, menu_id, quantity, price, note)
+        VALUES (?, ?, ?, ?, ?)
+    ");
+    $stmt->execute([
+        $cart_id,
+        $menu['menu_id'],
+        1,
+        $menu['price'],
+        $optional
+    ]);
 
-    // เก็บรายละเอียดเพิ่มเติมไว้ใน session (optional) หรือ table แยก ถ้าต้องการ
     $_SESSION['cart_optional'][$pdo->lastInsertId()] = $optional;
 
     header('Location: ../../fontend/cart/cartmenu.php');
     exit;
 }
-
-  
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

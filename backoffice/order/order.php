@@ -3,23 +3,25 @@ require_once '../../includes/db.php';
 require_once '../../includes/config.php';
 session_start();
 
-$stmt = $pdo->query("SELECT * FROM orders");
-$menus = $stmt->fetchALL();
-
 $statusMap = [
-    1 => 'pending',  // PLACE ORDER
-    2 => 'preparing',     // PROGRESS
-    3 => 'completed'     // COMPLETED
+    1 => 'pending',   // PLACE ORDER
+    2 => 'preparing', // PROGRESS
+    3 => 'completed'  // COMPLETED
 ];
 
 $menu = isset($_GET['menu']) ? (int)$_GET['menu'] : 1;
-$status = $statusMap[$menu] ?? 'place_order';
+$status = $statusMap[$menu] ?? 'pending';
 
-// ดึงออร์เดอร์ตาม status
-$stmt = $pdo->prepare("SELECT * FROM orders WHERE status = ?");
+// ดึงออร์เดอร์เฉพาะ status และไม่เกิน 1 วัน
+$stmt = $pdo->prepare("
+    SELECT * 
+    FROM orders 
+    WHERE status = ? 
+      AND order_at >= NOW() - INTERVAL 1 DAY
+    ORDER BY order_at DESC
+");
 $stmt->execute([$status]);
 $menus = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 function timeAgo($time) {
     $diff = time() - strtotime($time);
@@ -31,12 +33,12 @@ function timeAgo($time) {
     } elseif ($diff < 86400) {
         return floor($diff/3600) . " ชั่วโมงที่ผ่านมา";
     } else {
-        return floor($diff/86400) . " วันที่ผ่านมา";
+        // ถ้าเกิน 1 วัน return ค่าว่างไปเลย
+        return "";
     }
 }
-
-
 ?>
+
 
 
 <!DOCTYPE html>

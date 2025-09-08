@@ -1,9 +1,33 @@
+
+.hot-badge {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Mali:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@100;300;400;900&display=swap');
+
+:root{
+    --primary-color:#C58940;
+    --secondary-color:#FAEAB1;
+    --thrid-color:#E5BA73;
+    --button-color:#FF853D;
+    --secondary-font: "Mali", cursive;
+    --primary-font: "Londrina Solid", sans-serif;
+}
+
+
 body{
-    height: 100vh;
+    
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #FAEAB1 !important;
+}
+
+*{
+    font-family: var(--secondary-font);
 }
 
 .nav-color{
@@ -18,7 +42,6 @@ body{
 .table-number{
     background-color: #C58940 !important;
     padding: 12px 24px; border-radius: 12px; font-size: 20px; font-weight: bold;
-
 }
 
 .font-nav {
@@ -28,15 +51,44 @@ body{
   transition: background-color 0.3s ease;
 }
 
+.table-number-edit-test {
+  font-family: var(--primary-font) !important;
+  background-color: var(--primary-color);
+  width: 450px;
+  height: 70px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 40px;
+  font-weight: bold;
+  -webkit-text-stroke: 1px #000000;
+  text-align: center;
+  line-height: normal;
+}
+
+.MenuH1 {
+      font-size:100px;
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      font-family: var(--primary-font) !important; 
+      letter-spacing: 12px;
+      -webkit-text-stroke: 3px #09105A;
+      color: #ffffff;
+      
+    }
+
+
 
 
 .wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* กำหนดให้ card เล็กสุด 250px แล้วขยายเต็มแถว */
-    gap: 20px; /* ระยะห่างระหว่าง card */
+    gap: 10px; /* ระยะห่างระหว่าง card */
     justify-items: center; /* จัด card ให้อยู่ตรงกลางในแต่ละ column */
     align-items: start;
     padding: 50px;
+
     --input-focus: #2d8cf0;
     --font-color: #323232;
     --font-color-sub:#666;
@@ -70,7 +122,6 @@ body{
 
 .card-side1::before{
     position: absolute;
-    content: 'Close';
     left: -70px;
     top: 0;
     width: 100px;
@@ -92,7 +143,6 @@ body{
 
 .card-side1::after{
     position: absolute;
-    content: 'Open';
     left: 80px;
     top: 0;
     width: 100px;
@@ -109,7 +159,7 @@ body{
 
 .slider {
     box-sizing: border-box;
-    border-radius: 5px;
+    border-radius: 10px !important;
     border: 2px solid var(--main-color);
     box-shadow: 4px 4px var(--main-color);
     position: absolute;
@@ -129,7 +179,7 @@ body{
     height: 20px;
     width: 20px;
     border: 2px solid var(--main-color);
-    border-radius: 5px;
+    border-radius: 10px !important;
     left: -2px;
     bottom: 2px;
     background-color: var(--bg-color);
@@ -160,19 +210,19 @@ body{
     text-decoration: underline;
 }
 
+
 .flip-card_inner {
     position: relative;
     width: 300px;
-    height: 350px;
+    height: 500px;
     background-color: transparent;
     perspective: 1000px;
     text-align: center;
-    transition: transform 0.8s;
     transform-style: preserve-3d;
 }
 
 .toggle:checked ~ .flip-card_inner {
-    transform: rotateY(180deg);
+    transform: none !important;     /* ปิด rotate เมื่อ toggle */
 }
 
 .toggle:checked ~ .flip-card_front {
@@ -181,7 +231,7 @@ body{
 
 .flip-card_front, .flip-card_back {
     padding: 20px;
-    position: absolute;
+    position: relative; /* ไม่ต้อง absolute */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -189,13 +239,14 @@ body{
     backface-visibility: hidden;
     background: lightgray;
     gap: 20px;
-    border-radius: 5px;
+    border-radius: 10px !important;
     border: 2px solid var(--main-color);
     box-shadow: 4px 4px var(--main-color);
 }
 
 .flip-card_back {
-    transform: rotateY(180deg);
+    transform: none !important;     /* ปิด rotateY */
+    backface-visibility: visible;   /* ตัวอักษรไม่กลับด้าน */
 }
 
 .flip-card_form{
@@ -216,12 +267,27 @@ body{
 .flip-card_input {
     width: 250px;
     height: 40px;
-    border-radius: 5px;
+    border-radius: 10px !important;
     border: 2px solid var(--main-color);
     background-color: var(--bg-color);
     box-shadow: 4px 4px var(--main-color);
      font-weight: 600;
      outline: none;
+     font-weight:bold; 
+     font-size:20px;
+}
+
+.flip-card_input-new {
+    width: 250px;
+    height: 40px;
+    border-radius: 10px !important;
+    border: 2px solid var(--main-color);
+    background-color: var(--bg-color);
+    box-shadow: 4px 4px var(--main-color);
+     font-weight: 600;
+     outline: none;
+     font-weight:bold; 
+     font-size:20px;
 }
 
 .flip-card_input::placeholder{
@@ -242,7 +308,7 @@ body{
     margin: 20px 0 20px 0; 
     width: 120px;
     height: 40px;
-    border-radius: 5px;
+    border-radius: 10px !important;
     border: 2px solid var(--main-color);
     background-color: var(--bg-color);
     box-shadow: 4px 4px var(--main-color);
@@ -260,9 +326,73 @@ body{
     background-color: #FAEAB1 !important;
 }
 
-.nav-link i {
-  margin-bottom: 4px; /* ปรับค่าตามต้องการ */
+.forlazy-oat{
+    width:50%;
+    border-radius:12px;
+    margin-bottom:20px;
 }
+
+/*Don't know*/
+
+.slider:before,
+.slider:after {
+  content: "";
+}
+
+.card-switch-new{
+    padding: 20px;
+    position: relative; /* ไม่ต้อง absolute */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background: lightgray;
+
+    
+    border-radius: 20px;
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+}
+
+
+/*For เปิดโต๊ะ*/
+.custom-button{
+    width: 120px !important;
+    height: 50px;
+    border-radius: 10px !important;
+    border: 2px solid var(--main-color) !important;
+    background-color: var(--bg-color);
+    box-shadow: 4px 4px var(--main-color);
+    font-weight: 600;
+    outline: none;
+    font-weight:bold; 
+    font-size:20px;
+    text-align: center !important; /* ตัวหนังสืออยู่กลางปุ่มแนวนอน */
+    vertical-align: middle !important;
+    display: flex !important;      /* จัดแนวตรงกลางทั้งแนวตั้งและแนวนอน */
+    justify-content: center !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.custom-button:active {
+  transform: scale(0.97);
+  box-shadow: 2px 2px var(--main-color);
+  transition: transform 0.1s ease;
+}
+
+/* Hover สำหรับสถานะ OPEN */
+.custom-button.is-open:hover {
+        border: 2px solid var(--main-color) !important;
+    box-shadow: 4px 4px var(--main-color) !important;
+    color: black;
+    box-shadow: none;
+    transition: 0.4s !important;
+    background-color: #dc3545 !important; /* เทาอ่อน */
+}
+
 
 
 
