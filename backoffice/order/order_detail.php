@@ -58,21 +58,7 @@ $statusFlow = [
 </head>
 <body class="body">
 
-<nav class="navbar navbar-expand-lg nav-color">
-    <div class="container-fluid">
-        <div>
-            <img src="../../assets/img/152431942_114763933966355_8265361494354481544_n.png" alt="" width="100px" height="100px">
-        </div>
-        <div class="ms-auto">
-            <a href="https://www.youtube.com/@wachirawit007/videos">
-                <img src="./assets/img/history.png" alt="" width="60px" style="margin-right: 10px">
-            </a>
-        </div>
-        <div class="table-number">
-            Table <?= htmlspecialchars($id) ?>
-        </div>
-    </div>
-</nav>
+<?php include "../components/test _1.php"?>
 
 <div>
     <a href="./foodrec.php">
@@ -87,7 +73,7 @@ $statusFlow = [
         <div class="menu-card">
 
         <div class="position-relative m-5" >
-  <div class="progress" role="progressbar" aria-label="Progress" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="height: 2px;">
+  <div class="progress" role="progressbar" aria-label="Progress" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="height: 6px;">
     <?php 
       // กำหนดความกว้างของ progress ตามสถานะ
       $progressWidth = 0;

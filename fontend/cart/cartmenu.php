@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_order'])) {
 </head>
 
 <body class="body background-customer">
-  <?php include "../../backoffice/components/navbar.php" ?>
+  <?php include "../layout/navbar.php" ?>
 
   <div class="container position-relative">
     <div class="menu-card">

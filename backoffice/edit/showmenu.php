@@ -202,7 +202,7 @@ function toggleHotMenu(id, setHot) {
       cancelButtonText: 'ไม่'
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "unset_hotmenu.php?id=" + id;
+        window.location.href = "hotmenu.php?id=" + id;
       }
     })
   }

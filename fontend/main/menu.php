@@ -85,21 +85,7 @@ if (isset($_GET['table_id'])) {
 <body class="body background-customer"> 
 
 
-<nav class="navbar navbar-expand-lg nav-color">
-  <div class="container-fluid">
-  <div>
-<img src="../../assets/img/152431942_114763933966355_8265361494354481544_n.png" alt="" width="100px" height="100px">
-</div>
-<div class="ms-auto adminnav">
-  <a href="../../fontend/history/history.php"><img src="../../assets/img/historymenu (1).png" alt="" style="width: 55px; margin-left: 7px; margin-top: 2px;" ></a>
-</div>
-<div class="table-number">
-    Table
-    <?= isset($_SESSION['table_id']) ? htmlspecialchars($_SESSION['table_id']) : "ไม่ระบุ" ?>
-</div>
-
-
-</nav>
+<?php include "../layout/navbar.php"?>
 
 <div><a href="./index.php"><img src="./assets/img/back-arrow.png" alt="" style="width: 50px; margin-top: 5px; margin-left: 15px; margin-bottom: 15px;"></a></div>
 

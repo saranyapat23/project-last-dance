@@ -54,7 +54,7 @@ body{
 .table-number-edit-test {
   font-family: var(--primary-font) !important;
   background-color: var(--primary-color);
-  width: 450px;
+  width: 600px;
   height: 70px;
   padding: 12px 24px;
   border-radius: 10px;

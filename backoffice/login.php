@@ -1,5 +1,7 @@
 <?php
-require_once './includes/db.php';
+require_once '../includes/config.php';
+require_once '../includes/db.php';
+
 
 $message = '';
 $type = '';
@@ -19,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // ส่งไปหน้า dashboard หลัง 2 วิ
         echo "<script>
                 setTimeout(function(){
-                    window.location.href='../../project-last-dance/backoffice/dashboard/dashboard.php';
+                    window.location.href='../backoffice/dashboard/dashboard.php';
                 },1000);
               </script>";
     } else {
@@ -36,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>เข้าสู่ระบบ</title>
   <link rel="icon" type="image/x-icon" href="./assets/img/152431942_114763933966355_8265361494354481544_n.png">
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -44,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <nav class="navbar navbar-expand-lg nav-color">
   <div class="container-fluid">
     <div>
-      <img src="./assets/img/152431942_114763933966355_8265361494354481544_n.png" alt="" width="100px" height="100px">
+      <img src="../assets/img/152431942_114763933966355_8265361494354481544_n.png" alt="" width="100px" height="100px">
     </div>
     <div class="table-number">Admin</div>
   </div>
@@ -53,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="login-wrapper">
   <div class="login-box center-image container-sm" style="margin-top: 100px">
     <div class="center-image">
-      <img class="logmage" src="./assets/img/user (3).png" alt="">
+      <img class="logmage" src="../assets/img/user (3).png" alt="">
     </div>
 
     <form method="post">

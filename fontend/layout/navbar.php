@@ -4,10 +4,12 @@
 <img src="../../assets/img/152431942_114763933966355_8265361494354481544_n.png" alt="" width="100px" height="100px">
 </div>
 <div class="ms-auto adminnav">
-  <a href="../../fontend/history/history.php"><img src="../../assets/img/historymenu (1).png" alt="" style="width: 55px; margin-left: 7px; margin-top: 2px;" ></a>
+  <a href="../../fontend/history/history.php"><img src="../../assets/img/order-history.png" alt="" style="width: 55px; margin-left: 7px; margin-top: 2px;" ></a>
 </div>
 <div class="table-number">
-    Table 2
-  </div>
+    Table
+    <?= isset($_SESSION['table_id']) ? htmlspecialchars($_SESSION['table_id']) : "ไม่ระบุ" ?>
+</div>
+
 
 </nav>

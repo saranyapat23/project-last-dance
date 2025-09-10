@@ -3,19 +3,32 @@ require_once '../../includes/db.php';
 require_once '../../includes/config.php';
 session_start();
 
-// ===== Filter by Date =====
-$selectedDate = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
+// ถ้าไม่มี date ที่ส่งมา → default เป็นวันนี้
+$selectedDate = $_GET['date'] ?? date('Y-m-d');
 
-if ($selectedDate) {
-    // ดึงข้อมูลเฉพาะวันนั้น
-    $stmt = $pdo->prepare("SELECT * FROM orders WHERE DATE(order_at) = ? ORDER BY order_at DESC");
+// ===== Filter by Date =====
+if (!empty($selectedDate)) {
+    //เลือกเฉพาะวันนั้น
+    $stmt = $pdo->prepare("
+        SELECT * FROM orders
+        WHERE deleted_at IS NULL
+        AND DATE(order_at) = ?
+        ORDER BY order_at DESC
+    ");
     $stmt->execute([$selectedDate]);
 } else {
-    // ดึงทั้งหมด
-    $stmt = $pdo->query("SELECT * FROM orders ORDER BY order_at DESC");
+    //แสดงทั้งหมด
+    $stmt = $pdo->prepare("
+        SELECT * FROM orders
+        WHERE deleted_at IS NULL
+        ORDER BY order_at DESC
+    ");
+    $stmt->execute();
 }
 
 $menus = $stmt->fetchAll();
+
+
 
 // ====== รายงานสรุป ======
 $sql = "
@@ -43,6 +56,9 @@ foreach ($type as $row) {
     $data[] = (int)$row['qty'];
 }
 
+
+
+
 // ====== เมนูทั้งหมด (ไม่อิงวัน) ======
 $sql = "SELECT COUNT(*) AS total_menus
         FROM menu
@@ -50,28 +66,63 @@ $sql = "SELECT COUNT(*) AS total_menus
         AND type_id != 101";
 $totalMenus = $pdo->query($sql)->fetchColumn();
 
+
+
+
 // ====== ออเดอร์ตามวันที่เลือก ======
 $stmt = $pdo->prepare("
     SELECT COUNT(*) AS total_orders
     FROM orders
     WHERE deleted_at IS NULL
-    AND DATE(order_at) = ?
-");
-$stmt->execute([$selectedDate]);
+    AND DATE(order_at) = CURDATE()
+    " . (!empty($_GET['date']) ? "AND DATE(order_at) = ?" : "")
+);
+
+if ($selectedDate) {
+    // มีการเลือกวันที่
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) AS total_orders
+        FROM orders
+        WHERE deleted_at IS NULL
+        AND DATE(order_at) = ?
+    ");
+    $stmt->execute([$selectedDate]);
+} else {
+    // ใช้วันนี้
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) AS total_orders
+        FROM orders
+        WHERE deleted_at IS NULL
+        AND DATE(order_at) = CURDATE()
+    ");
+    $stmt->execute();
+}
+
 $totalOrders = $stmt->fetchColumn();
+
+
+
 
 // ====== ยอดขายตามวันที่เลือก ======
 $stmt = $pdo->prepare("
     SELECT SUM(od.price * od.quantity) AS total_sales
     FROM orders o
     JOIN order_details od ON od.order_id = o.id
-    WHERE DATE(o.order_at) = ?
-");
-$stmt->execute([$selectedDate]);
-$todaySales = $stmt->fetchColumn(); 
-if (!$todaySales) {
-    $todaySales = 0;
+    WHERE " . (!empty($_GET['date']) ? "DATE(o.order_at) = ?" : "DATE(o.order_at) = CURDATE()")
+);
+
+if (!empty($_GET['date'])) {
+    $stmt->execute([$selectedDate]);
+} else {
+    $stmt->execute();
 }
+$todaySales = $stmt->fetchColumn() ?? 0;
+
+
+
+
+
+
 
 // ====== ยอดขายย้อนหลัง 7 วัน ======
 $sql = "
@@ -85,6 +136,12 @@ $sql = "
     ORDER BY order_date
 ";
 $sales7days = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+
+
+
 
 // ====== เตรียม labels และ data สำหรับกราฟ ======
 $salesLabels = [];
@@ -175,24 +232,25 @@ for ($i = 6; $i >= 0; $i--) {
         </div>
       </div>
     </div>
-    <div class="col-md-3">
-  <div class="card shadow-sm border-0 rounded-3">
-    <div class="card-body text-center" style="border-radius: 20px;padding-top: 30px;">
-      <h5 class="card-title">เลือกวัน</h5>
-      <form method="get">
-        <input 
-          type="date" 
-          class="form-control text-center" 
-          name="date" 
-          value="<?= isset($_GET['date']) ? htmlspecialchars($_GET['date']) : date('Y-m-d') ?>" 
-          onchange="this.form.submit()"
-        >
-      </form>
-      <p class="fs-6 mt-2 fw-bold">
-        <?= isset($_GET['date']) ? $_GET['date'] : date('Y-m-d') ?>
-      </p>
+   <div class="col-md-3">
+      <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body text-center" style="border-radius: 20px;padding-top: 45px;">
+          <i class="fa-solid fa-calendar fa-2x mb-2" style="color: #63E6BE;"></i>
+          <h5 class="card-title">เลือกวัน</h5>
+          <form method="get">
+            <input 
+              type="date" 
+              class="form-control text-center" 
+              name="date" 
+              value="<?= isset($_GET['date']) ? htmlspecialchars($_GET['date']) : date('Y-m-d') ?>" 
+              onchange="this.form.submit()"
+            >
+          </form>
+          <p class="fs-6 mt-2 fw-bold">
+            <?= isset($_GET['date']) ? $_GET['date'] : date('Y-m-d') ?>
+          </p>
+        </div>
     </div>
-  </div>
 </div>
   </div>
 
@@ -224,52 +282,52 @@ for ($i = 6; $i >= 0; $i--) {
   </div>
 
   <!-- Table Section -->
-  <div class="card shadow-sm border-0 rounded-3 mt-5">
-  <div class="card-header bg-dark text-white fw-bold">
-    <i class="fa-solid fa-clock-rotate-left"></i> ประวัติคำสั่งซื้อ
-  </div>
-  <div class="card-body">
-    <table id="ordersTable" class="table table-striped table-hover align-middle">
-      <thead class="table-dark">
-        <tr>
-          <th>#</th>
-          <th>โต๊ะที่</th>
-          <th>วันที่</th>
-          <th>เวลา</th>
-          <th>สถานะ</th>
-          <th>ราคารวม</th>
-          <th>รายละเอียด</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php $i = 1; foreach ($menus as $menu): ?>
-          <?php
-            $status = htmlspecialchars($menu['status']);
-            $statusColors = [
-              'pending'   => 'warning',
-              'preparing' => 'primary',
-              'completed' => 'success'
-            ];
-            $badgeClass = $statusColors[$status] ?? 'secondary';
-          ?>
-          <tr>
-            <td><?= $i++ ?></td>
-            <td><?= htmlspecialchars($menu['table_id']) ?></td>
-            <td><?= date('d/m/Y', strtotime($menu['order_at'])) ?></td>
-            <td><?= date('H:i', strtotime($menu['order_at'])) ?> น.</td>
-            <td><span class="badge bg-<?= $badgeClass ?>"><?= $status ?></span></td>
-            <td>฿<?= htmlspecialchars($menu['total_price']) ?></td>
-            <td>
-              <a href="showmenu.php?id=<?= $menu['id'] ?>" class="btn btn-sm btn-outline-info">
-                <i class="fa-solid fa-circle-info"></i>
-              </a>
-            </td>
-          </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-  </div>
-</div>
+    <div class="card shadow-sm border-0 rounded-3 mt-5">
+      <div class="card-header bg-dark text-white fw-bold">
+        <i class="fa-solid fa-clock-rotate-left"></i> ประวัติคำสั่งซื้อ
+      </div>
+      <div class="card-body">
+        <table id="ordersTable" class="table table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>#</th>
+              <th>โต๊ะที่</th>
+              <th>วันที่</th>
+              <th>เวลา</th>
+              <th>สถานะ</th>
+              <th>ราคารวม</th>
+              <th>รายละเอียด</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php $i = 1; foreach ($menus as $menu): ?>
+              <?php
+                $status = htmlspecialchars($menu['status']);
+                $statusColors = [
+                  'pending'   => 'warning',
+                  'preparing' => 'primary',
+                  'completed' => 'success'
+                ];
+                $badgeClass = $statusColors[$status] ?? 'secondary';
+              ?>
+              <tr>
+                <td><?= $i++ ?></td>
+                <td><?= htmlspecialchars($menu['table_id']) ?></td>
+                <td><?= date('d/m/Y', strtotime($menu['order_at'])) ?></td>
+                <td><?= date('H:i', strtotime($menu['order_at'])) ?> น.</td>
+                <td><span class="badge bg-<?= $badgeClass ?>"><?= $status ?></span></td>
+                <td>฿<?= htmlspecialchars($menu['total_price']) ?></td>
+                <td>
+                  <a href="showmenu.php?id=<?= $menu['id'] ?>" class="btn btn-sm btn-outline-info">
+                    <i class="fa-solid fa-circle-info"></i>
+                  </a>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
 </div>
 

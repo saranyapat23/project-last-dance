@@ -15,6 +15,7 @@
 *{
     font-family: var(--secondary-font);
 }
+
 .nav-color{
     background-color: var(--secondary-color);
 }
@@ -296,6 +297,22 @@ background-color: var(--button-color);
 .table-number-edit-test{
    background-color: var(--primary-color);
   width: 450px;
+  height: 70px;
+  padding: 12px 24px;           /* ระยะห่างด้านใน */
+  border-radius: 10px;
+  color: #ffffff;          /* ความโค้งของขอบ */
+  font-size:40px;              /* ขนาดตัวหนังสือ */
+  font-weight: bold;            /* ตัวหนา */
+  font-family: var(--primary-font) !important; 
+  -webkit-text-stroke: 1px #000000;                           /* ทำให้ขนาดปรับตามเนื้อหา */
+  text-align: center;
+  position: flex;
+  line-height: normal;
+}
+
+.table-number-edit-test-new{
+   background-color: var(--primary-color);
+  width: 150px;
   height: 70px;
   padding: 12px 24px;           /* ระยะห่างด้านใน */
   border-radius: 10px;
@@ -686,16 +703,48 @@ background-color: var(--button-color);
       display: inline-block;
       margin-right: 6px;
     }
-    .check-btn {
-      background: var(--button-color);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 25px;
-      font-size: 18px;
-      cursor: pointer;
-      box-shadow: 2px 3px 6px rgba(0,0,0,0.2);
-    }
+.check-btn {
+    display: inline-block;
+    text-decoration: none;          /* เอา underline ออก */
+    background: #FF853D;            /* สีส้มหลักของเว็บ */
+    color: white;
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover effect */
+.check-btn:hover {
+    background: #FFA25B;            /* สีส้มอ่อนขึ้นเวลา hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    color: #ffffff;
+}
+
+/* Ripple effect เล็ก ๆ (optional) */
+.check-btn::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0; left: 0;
+    background: rgba(255, 255, 255, 0.15);
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 30px;
+}
+
+.check-btn:active::after {
+    opacity: 1;
+    transition: 0s;
+}
+
     .back-btn {
       position: absolute;
       top: 20px;
@@ -809,7 +858,7 @@ background-color: var(--button-color);
 }
 
 /* เมื่อ radio ถูกเลือก */
-.menu-options input[type="checkbox"]:checked + label {
+.menu-options input[type="radio"]:checked + label {
   color: var(--secondary-color);
   background-color: var(--primary-color);  /* สีเวลาเลือก */
 }
@@ -830,6 +879,15 @@ input[type="password"].disc {
   -webkit-text-security: disc;
 }
 
+.badge.pastel-yellow {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge.pastel-blue {
+    background-color: #cce5ff;
+    color: #004085;
+}
 
 
 

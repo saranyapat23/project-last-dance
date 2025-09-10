@@ -10,6 +10,7 @@ if (!$id) {
     exit;
 }
 
+// ดึงข้อมูลเมนู
 $stmt = $pdo->prepare("SELECT * FROM menu WHERE menu_id = ?");
 $stmt->execute([$id]);
 $menu = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -21,23 +22,37 @@ if (!$menu) {
 
 $error = '';
 
-// ✅ สร้าง cart ใหม่ถ้ายังไม่มีใน session
-if (!isset($_SESSION['cart_id'])) {
+// ===== ตรวจสอบหรือสร้าง cart =====
+$cart_id = $_SESSION['cart_id'] ?? null;
+
+// ถ้ามี cart_id ใน session, ตรวจสอบว่า cart ยังอยู่จริง
+if ($cart_id) {
+    $stmt = $pdo->prepare("SELECT id FROM cart WHERE id = ?");
+    $stmt->execute([$cart_id]);
+    $existing_cart = $stmt->fetchColumn();
+
+    if (!$existing_cart) {
+        // cart ถูกลบไปแล้ว สร้างใหม่
+        unset($_SESSION['cart_id']);
+        $cart_id = null;
+    }
+}
+
+// ถ้าไม่มี cart_id, สร้าง cart ใหม่
+if (!$cart_id) {
     if (!isset($_SESSION['table_id'])) {
         die("ไม่พบ table_id กรุณา Scan QR Code ก่อน");
     }
 
-    $table_id = $_SESSION['table_id']; // ได้จาก QR code
+    $table_id = $_SESSION['table_id'];
     $stmt = $pdo->prepare("INSERT INTO cart (table_id) VALUES (?)");
     $stmt->execute([$table_id]);
 
-    // เก็บ cart_id ไว้ใน session
     $_SESSION['cart_id'] = $pdo->lastInsertId();
+    $cart_id = $_SESSION['cart_id'];
 }
 
-$cart_id = $_SESSION['cart_id'];
-
-// ✅ เพิ่มสินค้าใน cart
+// ===== เพิ่มสินค้าใน cart =====
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     $optional = trim($_POST['optional'] ?? '');
     if ($optional === '') {
@@ -62,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     exit;
 }
 ?>
+
 
 
 <!DOCTYPE html>
